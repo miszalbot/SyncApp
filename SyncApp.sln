@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderSyncApp", "FolderSyncApp\FolderSyncApp.csproj", "{5D1A1570-B00C-40D4-928E-301DC2721D8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{CC1A3968-4A1B-421A-9A1D-9E20CF9A9EA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{5D1A1570-B00C-40D4-928E-301DC2721D8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D1A1570-B00C-40D4-928E-301DC2721D8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D1A1570-B00C-40D4-928E-301DC2721D8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC1A3968-4A1B-421A-9A1D-9E20CF9A9EA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC1A3968-4A1B-421A-9A1D-9E20CF9A9EA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC1A3968-4A1B-421A-9A1D-9E20CF9A9EA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC1A3968-4A1B-421A-9A1D-9E20CF9A9EA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
