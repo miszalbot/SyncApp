@@ -7,7 +7,7 @@ namespace FolderSyncApp
 {
     internal class Program
     {
-        private static NLog.Logger logger = LogManager.GetCurrentClassLogger();
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
             Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
