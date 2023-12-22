@@ -15,6 +15,13 @@ namespace FolderSyncApp
 
         public void StartScanning()
         {
+            /*
+            Main scanning code
+            Get all files in both source and target folder
+            Compare files for presence and hash
+            If missing or different source file is copied to target folder
+            */
+            logger.Info($"Scanning Source and Target folders");
             var sourceFolders = ScanFolder(_source);
             var targetFolders = ScanFolder(_target);
             foreach (var item in sourceFolders)
@@ -22,27 +29,39 @@ namespace FolderSyncApp
                 var file = targetFolders.Select(x => x).FirstOrDefault(y => y.Contains(item));
                 if (string.IsNullOrEmpty(file))
                 {
-                    logger.Info($"File {Path.Combine(_target, item)} not found making backup");
+                    logger.Info($"File {Path.Combine(_source, item)} not found making backup");
                     CopyFile(item);
                 }
                 else
                 {
                     var fileState = FilesAreSame(Path.Combine(_source, item), Path.Combine(_target, item));
-                    if(fileState)
+                    if(!fileState)
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        logger.Info($"File {Path.Combine(_target, item)} is changed updating backup");
+                        logger.Info($"File {Path.Combine(_source, item)} is changed updating backup");
                         CopyFile(item);
                     }
                 }
             }
+
+            // Check deleted items from source folder
+            sourceFolders = ScanFolder(_source);
+            targetFolders = ScanFolder(_target);
+            if(sourceFolders.Count < targetFolders.Count)
+            {
+                var missingSource = targetFolders.Except(sourceFolders);
+                foreach(var missing in missingSource)
+                {                    
+                    DeleteFile(missing);
+                }
+            }
         }
+
+
 
         private bool FilesAreSame(string sourceFile, string targetFile)
         {
+            //Comparing two file using md5hash
+            // If file is not possible to read it is skipped
             var sourceHash = GetMD5Hash(sourceFile);
             var targetHash = GetMD5Hash(targetFile);
             if(sourceHash == null)
@@ -66,6 +85,7 @@ namespace FolderSyncApp
         }
         private byte[]? GetMD5Hash(string file)
         {
+            //Geting Hash of file if file openning fail log error
             var myfile = new FileInfo(file);
             try
             {
@@ -87,6 +107,7 @@ namespace FolderSyncApp
 
         private void CopyFile(string partPath)
         {
+            //Checking if folder exist(if not is created) and copy file to target destination
             var path = Path.GetDirectoryName(partPath);
             var file = Path.GetFileName(partPath);
             string targetPath = Path.Combine(_target, path);
@@ -98,9 +119,22 @@ namespace FolderSyncApp
             File.Copy(Path.Combine(_source, partPath), Path.Combine(targetPath, file), true);
         }
 
+        private void DeleteFile(string partPath)
+        {
+            // File delete if folder is empty is deleted also
+            logger.Info($"File {Path.Combine(_target, partPath)} missing in source folder deleting from target");
+            var dirPath = Path.Combine(_target,Path.GetDirectoryName(partPath));  
+            var fullPath = Path.Combine(_target,partPath);          
+            File.Delete(fullPath);
+            if(Directory.GetFiles(dirPath).Count()== 0)
+            {
+                Directory.Delete(dirPath);
+            }
+        }
+
         private List<string> ScanFolder(string folder)
         {
-            logger.Info($"Scanning folder {folder}");
+            // ScanFolder for files and subfolders and remove source folder part of path            
             var list = Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories).ToList();
             return list.Select(x => x.Replace(folder, "").TrimStart('\\')).ToList();
         }
